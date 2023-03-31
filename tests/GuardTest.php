@@ -2,23 +2,24 @@
 
 namespace Laravel\Sanctum\Tests;
 
-use DateTimeInterface;
-use Illuminate\Auth\EloquentUserProvider;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Str;
-use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
-use Laravel\Sanctum\Events\TokenAuthenticated;
-use Laravel\Sanctum\Guard;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Sanctum\PersonalAccessToken;
-use Laravel\Sanctum\Sanctum;
-use Laravel\Sanctum\SanctumServiceProvider;
 use Mockery;
-use Orchestra\Testbench\TestCase;
+use DateTime;
 use stdClass;
+use DateTimeInterface;
+use Laravel\Sanctum\Guard;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Laravel\Sanctum\Sanctum;
+use Laravel\Sanctum\HasApiTokens;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Auth\EloquentUserProvider;
+use Laravel\Sanctum\SanctumServiceProvider;
+use Laravel\Sanctum\Events\TokenAuthenticated;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 
 class GuardTest extends TestCase
 {
@@ -40,24 +41,16 @@ class GuardTest extends TestCase
         Mockery::close();
     }
 
-    public function test_authentication_is_attempted_with_web_middleware()
+    public function test_authentication_is_not_attempted_with_web_middleware()
     {
         $factory = Mockery::mock(AuthFactory::class);
 
         $guard = new Guard($factory, null, 'users');
 
-        $webGuard = Mockery::mock(stdClass::class);
+        $factory->shouldNotReceive('guard')
+                ->with('web');
 
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn($fakeUser = new User);
-
-        $user = $guard->__invoke(Request::create('/', 'GET'));
-
-        $this->assertSame($user, $fakeUser);
-        $this->assertTrue($user->tokenCan('foo'));
+        $guard->__invoke(Request::create('/', 'GET'));
     }
 
     public function test_authentication_is_attempted_with_token_if_no_session_present()
@@ -67,14 +60,6 @@ class GuardTest extends TestCase
         $factory = Mockery::mock(AuthFactory::class);
 
         $guard = new Guard($factory, null, 'users');
-
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
 
         $request = Request::create('/', 'GET');
         $request->headers->set('Authorization', 'Bearer test');
@@ -95,12 +80,6 @@ class GuardTest extends TestCase
 
         $webGuard = Mockery::mock(stdClass::class);
 
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
-
         $request = Request::create('/', 'GET');
         $request->headers->set('Authorization', 'Bearer test');
 
@@ -111,12 +90,12 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
             'token' => hash('sha256', 'test'),
-            'created_at' => now()->subMinutes(60),
+            'created_at' => new DateTime('-60 minutes'),
         ]);
 
         $user = $guard->__invoke($request);
@@ -133,14 +112,6 @@ class GuardTest extends TestCase
 
         $guard = new Guard($factory, null, 'users');
 
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-            ->with('web')
-            ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
-
         $request = Request::create('/', 'GET');
         $request->headers->set('Authorization', 'Bearer test');
 
@@ -151,12 +122,12 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
             'token' => hash('sha256', 'test'),
-            'expires_at' => now()->subMinutes(60),
+            'expires_at' => new DateTime('-60 minutes'),
         ]);
 
         $user = $guard->__invoke($request);
@@ -173,14 +144,6 @@ class GuardTest extends TestCase
 
         $guard = new Guard($factory, null, 'users');
 
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-            ->with('web')
-            ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
-
         $request = Request::create('/', 'GET');
         $request->headers->set('Authorization', 'Bearer test');
 
@@ -191,7 +154,7 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
@@ -212,14 +175,6 @@ class GuardTest extends TestCase
         $factory = Mockery::mock(AuthFactory::class);
 
         $guard = new Guard($factory, null);
-
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
 
         $request = Request::create('/', 'GET');
         $request->headers->set('Authorization', 'Bearer test');
@@ -270,7 +225,7 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
@@ -281,6 +236,7 @@ class GuardTest extends TestCase
 
         $this->assertNull($returnedUser);
         $this->assertInstanceOf(EloquentUserProvider::class, $requestGuard->getProvider());
+
         Event::assertNotDispatched(TokenAuthenticated::class);
     }
 
@@ -295,14 +251,6 @@ class GuardTest extends TestCase
         $factory = Mockery::mock(AuthFactory::class);
 
         $guard = new Guard($factory, null, 'users');
-
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-            ->with('web')
-            ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
 
         $request = Request::create('/', 'GET');
 
@@ -323,6 +271,7 @@ class GuardTest extends TestCase
 
         $request->headers->set('Authorization', $invalidToken);
         $returnedUser = $guard->__invoke($request);
+
         $this->assertNull($returnedUser);
     }
 
@@ -351,7 +300,7 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
@@ -362,6 +311,7 @@ class GuardTest extends TestCase
 
         $this->assertEquals($user->id, $returnedUser->id);
         $this->assertInstanceOf(EloquentUserProvider::class, $requestGuard->getProvider());
+
         Event::assertDispatched(TokenAuthenticated::class);
     }
 
@@ -386,7 +336,7 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
@@ -401,6 +351,7 @@ class GuardTest extends TestCase
         });
 
         $user = $requestGuard->setRequest($request)->user();
+
         $this->assertNull($user);
 
         Sanctum::$accessTokenAuthenticationCallback = null;
@@ -414,14 +365,6 @@ class GuardTest extends TestCase
         $factory = Mockery::mock(AuthFactory::class);
 
         $guard = new Guard($factory, null);
-
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
 
         $request = Request::create('/', 'GET');
         $request->headers->set('X-Auth-Token', 'test');
@@ -462,14 +405,6 @@ class GuardTest extends TestCase
 
         $guard = new Guard($factory, null);
 
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
-
         $request = Request::create('/', 'GET');
         $request->headers->set('Authorization', 'Bearer test');
 
@@ -480,7 +415,7 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
@@ -507,14 +442,6 @@ class GuardTest extends TestCase
 
         $guard = new Guard($factory, null);
 
-        $webGuard = Mockery::mock(stdClass::class);
-
-        $factory->shouldReceive('guard')
-                ->with('web')
-                ->andReturn($webGuard);
-
-        $webGuard->shouldReceive('user')->once()->andReturn(null);
-
         $request = Request::create('/', 'GET');
         $request->headers->set('X-Auth-Token', 'test');
 
@@ -525,7 +452,7 @@ class GuardTest extends TestCase
             'remember_token' => Str::random(10),
         ]);
 
-        $token = PersonalAccessToken::forceCreate([
+        PersonalAccessToken::forceCreate([
             'tokenable_id' => $user->id,
             'tokenable_type' => get_class($user),
             'name' => 'Test',
