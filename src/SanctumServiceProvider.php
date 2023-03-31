@@ -3,13 +3,9 @@
 namespace Laravel\Sanctum;
 
 use Illuminate\Auth\RequestGuard;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Console\Commands\PruneExpired;
-use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class SanctumServiceProvider extends ServiceProvider
 {
@@ -27,9 +23,7 @@ class SanctumServiceProvider extends ServiceProvider
             ], config('auth.guards.sanctum', [])),
         ]);
 
-        if (! app()->configurationIsCached()) {
-            $this->mergeConfigFrom(__DIR__.'/../config/sanctum.php', 'sanctum');
-        }
+        $this->mergeConfigFrom(__DIR__.'/../config/sanctum.php', 'sanctum');
     }
 
     /**
@@ -47,7 +41,7 @@ class SanctumServiceProvider extends ServiceProvider
             ], 'sanctum-migrations');
 
             $this->publishes([
-                __DIR__.'/../config/sanctum.php' => config_path('sanctum.php'),
+                __DIR__.'/../config/sanctum.php' => base_path('config/sanctum.php'),
             ], 'sanctum-config');
 
             $this->commands([
@@ -55,9 +49,7 @@ class SanctumServiceProvider extends ServiceProvider
             ]);
         }
 
-        $this->defineRoutes();
         $this->configureGuard();
-        $this->configureMiddleware();
     }
 
     /**
@@ -70,25 +62,6 @@ class SanctumServiceProvider extends ServiceProvider
         if (Sanctum::shouldRunMigrations()) {
             return $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         }
-    }
-
-    /**
-     * Define the Sanctum routes.
-     *
-     * @return void
-     */
-    protected function defineRoutes()
-    {
-        if (app()->routesAreCached() || config('sanctum.routes') === false) {
-            return;
-        }
-
-        Route::group(['prefix' => config('sanctum.prefix', 'sanctum')], function () {
-            Route::get(
-                '/csrf-cookie',
-                CsrfCookieController::class.'@show'
-            )->middleware('web')->name('sanctum.csrf-cookie');
-        });
     }
 
     /**
@@ -121,17 +94,5 @@ class SanctumServiceProvider extends ServiceProvider
             request(),
             $auth->createUserProvider($config['provider'] ?? null)
         );
-    }
-
-    /**
-     * Configure the Sanctum middleware and priority.
-     *
-     * @return void
-     */
-    protected function configureMiddleware()
-    {
-        $kernel = app()->make(Kernel::class);
-
-        $kernel->prependToMiddlewarePriority(EnsureFrontendRequestsAreStateful::class);
     }
 }

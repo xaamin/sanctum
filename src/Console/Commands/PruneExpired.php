@@ -2,6 +2,7 @@
 
 namespace Laravel\Sanctum\Console\Commands;
 
+use DateTime;
 use Illuminate\Console\Command;
 use Laravel\Sanctum\Sanctum;
 
@@ -34,13 +35,15 @@ class PruneExpired extends Command
 
         $this->components->task(
             'Pruning tokens with expired expires_at timestamps',
-            fn () => $model::where('expires_at', '<', now()->subHours($hours))->delete()
+            fn () => $model::where('expires_at', '<', new DateTime("-{$hours} hours"))->delete()
         );
 
         if ($expiration = config('sanctum.expiration')) {
+            $minutes = $expiration + ($hours * 60);
+
             $this->components->task(
                 'Pruning tokens with expired expiration value based on configuration file',
-                fn () => $model::where('created_at', '<', now()->subMinutes($expiration + ($hours * 60)))->delete()
+                fn () => $model::where('created_at', '<', new DateTime("-{$minutes} minutes"))->delete()
             );
         } else {
             $this->components->warn('Expiration value not specified in configuration file.');

@@ -1,6 +1,6 @@
 {
-    "name": "laravel/sanctum",
-    "description": "Laravel Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
+    "name": "laravel/lumen-sanctum",
+    "description": "Lumen Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
     "keywords": ["laravel", "sanctum", "auth"],
     "license": "MIT",
     "support": {
@@ -11,6 +11,10 @@
         {
             "name": "Taylor Otwell",
             "email": "taylor@laravel.com"
+        },
+        {
+            "name": "Benjamín Martínez Mateos",
+            "email": "benjamin@itnovado.com"
         }
     ],
     "require": {

@@ -1,10 +1,10 @@
 <p align="center"><img src="/art/logo.svg" alt="Logo Laravel Sanctum"></p>
 
 <p align="center">
-<a href="https://github.com/laravel/sanctum/actions"><img src="https://github.com/laravel/sanctum/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/sanctum"><img src="https://img.shields.io/packagist/dt/laravel/sanctum" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/sanctum"><img src="https://img.shields.io/packagist/v/laravel/sanctum" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/sanctum"><img src="https://img.shields.io/packagist/l/laravel/sanctum" alt="License"></a>
+<a href="https://github.com/xaamin/lumen-sanctum/actions"><img src="https://github.com/xaamin/lumen-sanctum/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/lumen-sanctum"><img src="https://img.shields.io/packagist/dt/laravel/lumen-sanctum" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/lumen-sanctum"><img src="https://img.shields.io/packagist/v/laravel/lumen-sanctum" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/lumen-sanctum"><img src="https://img.shields.io/packagist/l/laravel/lumen-sanctum" alt="License"></a>
 </p>
 
 ## Introduction
@@ -25,7 +25,7 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 ## Security Vulnerabilities
 
-Please review [our security policy](https://github.com/laravel/sanctum/security/policy) on how to report security vulnerabilities.
+Please review [our security policy](https://github.com/xaamin/lumen-sanctum/security/policy) on how to report security vulnerabilities.
 
 ## License
 
