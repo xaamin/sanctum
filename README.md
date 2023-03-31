@@ -2,9 +2,9 @@
 
 <p align="center">
 <a href="https://github.com/xaamin/lumen-sanctum/actions"><img src="https://github.com/xaamin/lumen-sanctum/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/lumen-sanctum"><img src="https://img.shields.io/packagist/dt/laravel/lumen-sanctum" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/lumen-sanctum"><img src="https://img.shields.io/packagist/v/laravel/lumen-sanctum" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/lumen-sanctum"><img src="https://img.shields.io/packagist/l/laravel/lumen-sanctum" alt="License"></a>
+<a href="https://packagist.org/packages/xaamin/lumen-sanctum"><img src="https://img.shields.io/packagist/dt/xaamin/lumen-sanctum" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/xaamin/lumen-sanctum"><img src="https://img.shields.io/packagist/v/xaamin/lumen-sanctum" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/xaamin/lumen-sanctum"><img src="https://img.shields.io/packagist/l/xaamin/lumen-sanctum" alt="License"></a>
 </p>
 
 ## Introduction

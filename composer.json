@@ -1,5 +1,5 @@
 {
-    "name": "laravel/lumen-sanctum",
+    "name": "xaamin/lumen-sanctum",
     "description": "Lumen Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
     "keywords": ["laravel", "sanctum", "auth"],
     "license": "MIT",
