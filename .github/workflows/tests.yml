@@ -16,13 +16,13 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.0', 8.1, 8.2]
-        laravel: [9, 10]
+        php: [8.0, 8.1, 8.2]
+        lumen: [9, 10]
         exclude:
-          - php: '8.0'
-            laravel: 10
+          - php: 8.0
+            lumen: 10
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    name: PHP ${{ matrix.php }} - Lumen ${{ matrix.lumen }}
 
     steps:
       - name: Checkout code
@@ -39,7 +39,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-           composer require "illuminate/contracts=^${{ matrix.laravel }}" --no-update
+           composer require "illuminate/contracts=^${{ matrix.lumen }}" --no-update
            composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
