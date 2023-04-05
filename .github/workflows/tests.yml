@@ -39,8 +39,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-           composer require "illuminate/contracts=^${{ matrix.lumen }}" --no-update
-           composer update --prefer-dist --no-interaction --no-progress
+          composer require laravel/lumen:^${{ matrix.lumen }} --no-interaction --prefer-dist
+          composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
