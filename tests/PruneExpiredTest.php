@@ -2,12 +2,12 @@
 
 namespace Laravel\Sanctum\Tests;
 
-use Illuminate\Foundation\Auth\User;
-use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 use Laravel\Sanctum\HasApiTokens;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Foundation\Auth\User;
 use Laravel\Sanctum\PersonalAccessToken;
 use Laravel\Sanctum\SanctumServiceProvider;
-use Orchestra\Testbench\TestCase;
+use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 
 class PruneExpiredTest extends TestCase
 {
@@ -22,7 +22,7 @@ class PruneExpiredTest extends TestCase
         ]);
     }
 
-    public function test_can_delete_expired_tokens_with_integer_expiration()
+    public function testCanDeleteExpiredTokensWithIntegerExpiration()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -67,7 +67,7 @@ class PruneExpiredTest extends TestCase
         $this->assertDatabaseHas('personal_access_tokens', ['name' => 'Test_3']);
     }
 
-    public function test_cant_delete_expired_tokens_with_null_expiration()
+    public function testCantDeleteExpiredTokensWithNullExpiration()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -94,7 +94,7 @@ class PruneExpiredTest extends TestCase
         $this->assertDatabaseHas('personal_access_tokens', ['name' => 'Test']);
     }
 
-    public function test_can_delete_expired_tokens_with_expires_at_expiration()
+    public function testCanDeleteExpiredTokensWithExpiresAtExpiration()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
