@@ -2,12 +2,12 @@
 
 namespace Laravel\Sanctum\Tests;
 
-use Laravel\Sanctum\PersonalAccessToken;
 use PHPUnit\Framework\TestCase;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class PersonalAccessTokenTest extends TestCase
 {
-    public function test_can_determine_what_it_can_and_cant_do()
+    public function testCanDetermineWhatItCanAndCantDo()
     {
         $token = new PersonalAccessToken;
 

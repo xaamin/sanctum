@@ -41,7 +41,7 @@ class GuardTest extends TestCase
         Mockery::close();
     }
 
-    public function test_authentication_is_not_attempted_with_web_middleware()
+    public function testAuthenticationIsNotAttemptedWithWebMiddleware()
     {
         $factory = Mockery::mock(AuthFactory::class);
 
@@ -53,7 +53,7 @@ class GuardTest extends TestCase
         $guard->__invoke(Request::create('/', 'GET'));
     }
 
-    public function test_authentication_is_attempted_with_token_if_no_session_present()
+    public function testAuthenticationIsAttemptedWithTokenIfNoSessionPresent()
     {
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
 
@@ -69,7 +69,7 @@ class GuardTest extends TestCase
         $this->assertNull($user);
     }
 
-    public function test_authentication_with_token_fails_if_expired()
+    public function testAuthenticationWithTokenFailsIfExpired()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -103,7 +103,7 @@ class GuardTest extends TestCase
         $this->assertNull($user);
     }
 
-    public function test_authentication_with_token_fails_if_expires_at_has_passed()
+    public function testAuthenticationWithTokenFailsIfExpiresAtHasPassed()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -135,7 +135,7 @@ class GuardTest extends TestCase
         $this->assertNull($user);
     }
 
-    public function test_authentication_with_token_succeeds_if_expires_at_not_passed()
+    public function testAuthenticationWithTokenSucceedsIfExpiresAtNotPassed()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -167,7 +167,7 @@ class GuardTest extends TestCase
         $this->assertNull($user);
     }
 
-    public function test_authentication_is_successful_with_token_if_no_session_present()
+    public function testAuthenticationIsSuccessfulWithTokenIfNoSessionPresent()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -200,7 +200,46 @@ class GuardTest extends TestCase
         $this->assertInstanceOf(DateTimeInterface::class, $returnedUser->currentAccessToken()->last_used_at);
     }
 
-    public function test_authentication_with_token_fails_if_user_provider_is_invalid()
+    public function testAuthenticationIsSuccessfulWithTokenIfNoSessionPresentWithoutTouchingLastUsedAt()
+    {
+        $trackUsage = config('sanctum.track_usage');
+
+        config(['sanctum.track_usage' => false]);
+
+        $this->loadLaravelMigrations(['--database' => 'testbench']);
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+
+        $factory = Mockery::mock(AuthFactory::class);
+
+        $guard = new Guard($factory, null);
+
+        $request = Request::create('/', 'GET');
+        $request->headers->set('Authorization', 'Bearer test');
+
+        $user = User::forceCreate([
+            'name' => 'Taylor Otwell',
+            'email' => 'taylor@laravel.com',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+            'remember_token' => Str::random(10),
+        ]);
+
+        $token = PersonalAccessToken::forceCreate([
+            'tokenable_id' => $user->id,
+            'tokenable_type' => get_class($user),
+            'name' => 'Test',
+            'token' => hash('sha256', 'test'),
+        ]);
+
+        $returnedUser = $guard->__invoke($request);
+
+        $this->assertEquals($user->id, $returnedUser->id);
+        $this->assertEquals($token->id, $returnedUser->currentAccessToken()->id);
+        $this->assertNull($returnedUser->currentAccessToken()->last_used_at);
+
+        config(['sanctum.track_usage' => $trackUsage]);
+    }
+
+    public function testAuthenticationWithTokenFailsIfUserProviderIsInvalid()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -243,7 +282,7 @@ class GuardTest extends TestCase
     /**
      * @dataProvider invalidTokenDataProvider
      */
-    public function test_authentication_with_token_fails_if_token_has_invalid_format($invalidToken)
+    public function testAuthenticationWithTokenFailsIfTokenHasInvalidFormat($invalidToken)
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -275,7 +314,7 @@ class GuardTest extends TestCase
         $this->assertNull($returnedUser);
     }
 
-    public function test_authentication_is_successful_with_token_if_user_provider_is_valid()
+    public function testAuthenticationIsSuccessfulWithTokenIfUserProviderIsValid()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -315,7 +354,7 @@ class GuardTest extends TestCase
         Event::assertDispatched(TokenAuthenticated::class);
     }
 
-    public function test_authentication_fails_if_callback_returns_false()
+    public function testAuthenticationFailsIfCallbackReturnsFalse()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -357,7 +396,7 @@ class GuardTest extends TestCase
         Sanctum::$accessTokenAuthenticationCallback = null;
     }
 
-    public function test_authentication_is_successful_with_token_in_custom_header()
+    public function testAuthenticationIsSuccessfulWithTokenInCustomHeader()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -396,7 +435,7 @@ class GuardTest extends TestCase
         Sanctum::$accessTokenRetrievalCallback = null;
     }
 
-    public function test_authentication_fails_with_token_in_authorization_header_when_using_custom_header()
+    public function testAuthenticationFailsWithTokenInAuthorizationHeaderWhenUsingCustomHeader()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -433,7 +472,7 @@ class GuardTest extends TestCase
         Sanctum::$accessTokenRetrievalCallback = null;
     }
 
-    public function test_authentication_fails_with_token_in_custom_header_when_using_default_authorization_header()
+    public function testAuthenticationFailsWithTokenInCustomHeaderWhenUsingDefaultAuthorizationHeader()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();

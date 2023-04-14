@@ -3,15 +3,15 @@
 namespace Laravel\Sanctum\Tests;
 
 use Illuminate\Support\Carbon;
-use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 use Laravel\Sanctum\HasApiTokens;
-use Laravel\Sanctum\PersonalAccessToken;
-use Laravel\Sanctum\TransientToken;
 use Orchestra\Testbench\TestCase;
+use Laravel\Sanctum\TransientToken;
+use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 
 class HasApiTokensTest extends TestCase
 {
-    public function test_tokens_can_be_created()
+    public function testTokensCanBeCreated()
     {
         $class = new ClassThatHasApiTokens;
         $time = Carbon::now();
@@ -36,7 +36,7 @@ class HasApiTokensTest extends TestCase
         );
     }
 
-    public function test_can_check_token_abilities()
+    public function testCanCheckTokenAbilities()
     {
         $class = new ClassThatHasApiTokens;
 

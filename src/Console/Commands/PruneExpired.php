@@ -3,8 +3,8 @@
 namespace Laravel\Sanctum\Console\Commands;
 
 use DateTime;
-use Illuminate\Console\Command;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Console\Command;
 
 class PruneExpired extends Command
 {

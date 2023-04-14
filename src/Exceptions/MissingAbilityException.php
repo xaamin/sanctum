@@ -2,8 +2,8 @@
 
 namespace Laravel\Sanctum\Exceptions;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Arr;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class MissingAbilityException extends AuthorizationException
 {

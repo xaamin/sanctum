@@ -2,9 +2,9 @@
 
 namespace Laravel\Sanctum\Tests;
 
-use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 
 class CheckAbilitiesTest extends TestCase
 {
@@ -15,7 +15,7 @@ class CheckAbilitiesTest extends TestCase
         Mockery::close();
     }
 
-    public function test_request_is_passed_along_if_abilities_are_present_on_token()
+    public function testRequestIsPassedAlongIfAbilitiesArePresentOnToken()
     {
         $middleware = new CheckAbilities;
         $request = Mockery::mock();
@@ -31,7 +31,7 @@ class CheckAbilitiesTest extends TestCase
         $this->assertSame('response', $response);
     }
 
-    public function test_exception_is_thrown_if_token_doesnt_have_ability()
+    public function testExceptionIsThrownIfTokenDoesntHaveAbility()
     {
         $this->expectException('Laravel\Sanctum\Exceptions\MissingAbilityException');
 
@@ -46,7 +46,7 @@ class CheckAbilitiesTest extends TestCase
         }, 'foo', 'bar');
     }
 
-    public function test_exception_is_thrown_if_no_authenticated_user()
+    public function testExceptionIsThrownIfNoAuthenticatedUser()
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
@@ -59,7 +59,7 @@ class CheckAbilitiesTest extends TestCase
         }, 'foo', 'bar');
     }
 
-    public function test_exception_is_thrown_if_no_token()
+    public function testExceptionIsThrownIfNoToken()
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
