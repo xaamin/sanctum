@@ -7,6 +7,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Orchestra\Testbench\TestCase;
 use Laravel\Sanctum\TransientToken;
 use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\SanctumServiceProvider;
 use Laravel\Sanctum\Contracts\HasApiTokens as HasApiTokensContract;
 
 class HasApiTokensTest extends TestCase
@@ -43,6 +44,11 @@ class HasApiTokensTest extends TestCase
         $class->withAccessToken(new TransientToken);
 
         $this->assertTrue($class->tokenCan('foo'));
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [SanctumServiceProvider::class];
     }
 }
 
