@@ -23,7 +23,7 @@ class SanctumServiceProvider extends ServiceProvider
             ], config('auth.guards.sanctum', [])),
         ]);
 
-        $this->mergeConfigFrom(__DIR__.'/../config/sanctum.php', 'sanctum');
+        $this->mergeConfigFrom(__DIR__ . '/../config/sanctum.php', 'sanctum');
     }
 
     /**
@@ -37,11 +37,11 @@ class SanctumServiceProvider extends ServiceProvider
             $this->registerMigrations();
 
             $this->publishes([
-                __DIR__.'/../database/migrations' => database_path('migrations'),
+                __DIR__ . '/../database/migrations' => database_path('migrations'),
             ], 'sanctum-migrations');
 
             $this->publishes([
-                __DIR__.'/../config/sanctum.php' => base_path('config/sanctum.php'),
+                __DIR__ . '/../config/sanctum.php' => base_path('config/sanctum.php'),
             ], 'sanctum-config');
 
             $this->commands([
@@ -60,7 +60,7 @@ class SanctumServiceProvider extends ServiceProvider
     protected function registerMigrations()
     {
         if (Sanctum::shouldRunMigrations()) {
-            return $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+            return $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
     }
 

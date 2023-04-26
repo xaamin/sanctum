@@ -58,8 +58,10 @@ class Guard
 
             $accessToken = $model::findToken($token);
 
-            if (! $this->isValidAccessToken($accessToken) ||
-                ! $this->supportsTokens($accessToken->tokenable)) {
+            if (
+                !$this->isValidAccessToken($accessToken)
+                || !$this->supportsTokens($accessToken->tokenable)
+            ) {
                 return;
             }
 
@@ -116,7 +118,7 @@ class Guard
     protected function isValidBearerToken(string $token = null)
     {
         if (! is_null($token) && str_contains($token, '|')) {
-            $model = new Sanctum::$personalAccessTokenModel;
+            $model = new Sanctum::$personalAccessTokenModel();
 
             if ($model->getKeyType() === 'int') {
                 [$id, $token] = explode('|', $token, 2);
