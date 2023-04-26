@@ -36,6 +36,18 @@ trait HasApiTokens
     }
 
     /**
+     * Token string generator
+     *
+     * @return string
+     */
+    protected function getTokenString()
+    {
+        $tokenLength = intval(config('sanctum.token_length') ?? 40);
+
+        return Str::random($tokenLength);
+    }
+
+    /**
      * Create a new personal access token for the user.
      *
      * @param  string  $name
@@ -45,14 +57,20 @@ trait HasApiTokens
      */
     public function createToken(string $name, array $abilities = ['*'], DateTimeInterface $expiresAt = null)
     {
+        $plainTextToken = $this->getTokenString();
+
         $token = $this->tokens()->create([
             'name' => $name,
-            'token' => hash('sha256', $plainTextToken = Str::random(40)),
+            'token' => hash('sha256', $plainTextToken),
             'abilities' => $abilities,
             'expires_at' => $expiresAt,
         ]);
 
-        return new NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
+        if (config('sanctum.include_token_id')) {
+            $plainTextToken = $token->getKey() . '|' . $plainTextToken;
+        }
+
+        return new NewAccessToken($token, $plainTextToken);
     }
 
     /**
