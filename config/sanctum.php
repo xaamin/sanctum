@@ -23,7 +23,18 @@ return [
     |
     */
 
-    'token_length' => 64,
+    'token_length' => 40,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Include token id
+    |--------------------------------------------------------------------------
+    |
+    | This value controls is the token id should be included when token string is created.
+    |
+    */
+
+    'include_token_id' => true,
 
     /*
     |--------------------------------------------------------------------------
