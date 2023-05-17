@@ -1,6 +1,6 @@
 {
-    "name": "xaamin/lumen-sanctum",
-    "description": "Lumen Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
+    "name": "xaamin/sanctum",
+    "description": "Laravel/Lumen Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
     "keywords": ["laravel", "sanctum", "auth"],
     "license": "MIT",
     "support": {
@@ -29,7 +29,8 @@
         "mockery/mockery": "^1.0",
         "orchestra/testbench": "^7.0|^8.0",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^9.3"
+        "phpunit/phpunit": "^9.3",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "autoload": {
         "psr-4": {

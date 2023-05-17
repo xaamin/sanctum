@@ -19,8 +19,8 @@ class CheckAbilities
      */
     public function handle($request, $next, ...$abilities)
     {
-        if (! $request->user() || ! $request->user()->currentAccessToken()) {
-            throw new AuthenticationException;
+        if (!$request->user() || !$request->user()->currentAccessToken()) {
+            throw new AuthenticationException();
         }
 
         foreach ($abilities as $ability) {
