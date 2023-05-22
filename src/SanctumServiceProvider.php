@@ -38,11 +38,11 @@ class SanctumServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__ . '/../database/migrations' => database_path('migrations'),
-            ], 'sanctum-migrations');
+            ], 'migrations');
 
             $this->publishes([
                 __DIR__ . '/../config/sanctum.php' => base_path('config/sanctum.php'),
-            ], 'sanctum-config');
+            ], 'config');
 
             $this->commands([
                 PruneExpired::class,
