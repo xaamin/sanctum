@@ -48,7 +48,7 @@ class GuardTest extends TestCase
         $guard = new Guard($factory, null, 'users');
 
         $factory->shouldNotReceive('guard')
-                ->with('web');
+            ->with('web');
 
         $guard->__invoke(Request::create('/', 'GET'));
     }
